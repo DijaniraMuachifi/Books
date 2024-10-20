@@ -1,0 +1,98 @@
+@model ECommerceApp.Models.Book
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Background color for the page */
+    }
+
+    .details-container {
+        max-width: 800px; /* Maximum width of the container */
+        margin: auto; /* Center the container */
+        padding: 20px; /* Internal spacing */
+        background-color: white; /* Background color of the container */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    }
+
+    .iframe-container {
+        position: relative; /* To position the iframe */
+        padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden; /* Hide overflow */
+        border-radius: 8px; /* Rounded corners for the iframe */
+    }
+
+    .iframe-container iframe {
+        position: absolute; /* Position the iframe */
+        top: 0;
+        left: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        border: none; /* Remove borders from the iframe */
+    }
+</style>
+
+<div class="details-container">
+    <h1>Book Details</h1>
+    <h4>Book</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Genre)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Genre)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.PublishedDate)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.PublishedDate)
+        </dd>
+        <dt class="col-sm-4">
+            Link to the Book
+        </dt>
+        <dd class="col-sm-8">
+            @{
+                var formattedLinkUrl = Model.LinkUrl;
+
+                // Correct the URL if necessary
+                if (!string.IsNullOrEmpty(formattedLinkUrl) && !formattedLinkUrl.StartsWith("http://") && !formattedLinkUrl.StartsWith("https://"))
+                {
+                    formattedLinkUrl = "http://" + formattedLinkUrl;
+                }
+            }
+            <a href="@formattedLinkUrl" target="_blank">@formattedLinkUrl</a>
+        </dd>
+    </dl>
+
+    <!-- Iframe for book preview -->
+    @if (!string.IsNullOrEmpty(Model.LinkUrl))
+    {
+        <h4>Book Preview</h4>
+        <div class="iframe-container">
+            <iframe src="@formattedLinkUrl" frameborder="0" allowfullscreen></iframe>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a> |
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

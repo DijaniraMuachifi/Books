@@ -1,0 +1,130 @@
+@model IEnumerable<ECommerceApp.Models.Book>
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<style>
+    body {
+        background-color: #f8f9fa; /* Cor de fundo para a página */
+        font-family: Arial, sans-serif; /* Fonte mais moderna */
+    }
+
+    .result-item {
+        background-color: #fff; /* Cor de fundo dos resultados */
+        border-radius: 8px; /* Bordas arredondadas */
+        padding: 15px; /* Espaçamento interno */
+        margin-bottom: 15px; /* Espaçamento entre os resultados */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        transition: box-shadow 0.2s; /* Efeito ao passar o mouse */
+    }
+
+    .result-item:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra ao passar o mouse */
+    }
+
+    .result-title {
+        font-size: 1.2rem; /* Tamanho da fonte do título */
+        font-weight: bold; /* Negrito */
+        color: #343a40; /* Cor do texto do título */
+        margin-bottom: 5px; /* Espaçamento inferior */
+    }
+
+    .result-author {
+        font-size: 1rem; /* Tamanho da fonte do autor */
+        color: #6c757d; /* Cor do texto do autor */
+        font-style: italic; /* Estilo itálico para o autor */
+        margin-bottom: 5px; /* Espaçamento inferior */
+    }
+
+    .result-genre,
+    .result-date {
+        font-size: 0.9rem; /* Tamanho da fonte do gênero e data */
+        color: #495057; /* Cor do texto */
+        margin-bottom: 5px; /* Espaçamento inferior */
+    }
+
+    .result-link {
+        font-size: 0.9rem; /* Tamanho da fonte do link */
+        color: green; /* Cor do link */
+        text-decoration: none; /* Remover sublinhado */
+    }
+
+    .result-link:hover {
+        text-decoration: underline; /* Sublinhado ao passar o mouse */
+    }
+
+    .no-results {
+        text-align: center; /* Centralizar texto para nenhum resultado */
+        font-size: 1.2rem; /* Tamanho da fonte */
+        color: #6c757d; /* Cor do texto */
+        margin-top: 20px; /* Espaçamento superior */
+    }
+</style>
+
+<div class="container mt-4">
+    <h1 class="text-center">BookApp</h1>
+    
+    <form action="@Url.Action("Search", "Books")" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="query" value="@ViewBag.Query" class="form-control" placeholder="Enter the book name..." required />
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="results-list"> <!-- Lista de resultados -->
+        @if (Model.Any())
+        {
+            foreach (var book in Model)
+            {
+                @* Corrigir a URL se necessário *@
+                var formattedLinkUrl = book.LinkUrl;
+                if (!string.IsNullOrEmpty(formattedLinkUrl) && !formattedLinkUrl.StartsWith("http://") && !formattedLinkUrl.StartsWith("https://"))
+                {
+                    formattedLinkUrl = "http://" + formattedLinkUrl;
+                }
+
+                <div class="result-item">
+                    <div class="result-title">@book.Title</div>
+                    <div class="result-author">by @book.Author</div>
+                    <div class="result-genre">Genre: @book.Genre</div>
+                    <div class="result-date">Published on: @book.PublishedDate.ToString("MMMM dd, yyyy")</div>
+                    <a href="@formattedLinkUrl" class="result-link" target="_blank">@formattedLinkUrl</a>
+                    <div>
+                        <a href="@Url.Action("Details", "Books", new { id = book.Id })" class="btn btn-primary mt-2">View Details</a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 no-results">
+                <p>No books found.</p>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            @if (ViewBag.CurrentPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Search", new { query = ViewBag.Query, page = ViewBag.CurrentPage - 1 })">Previous</a>
+                </li>
+            }
+            @for (int pageNumber = 1; pageNumber <= ViewBag.TotalPages; pageNumber++)
+            {
+                <li class="page-item @(pageNumber == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Search", new { query = ViewBag.Query, page = pageNumber })">@pageNumber</a>
+                </li>
+            }
+            @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Search", new { query = ViewBag.Query, page = ViewBag.CurrentPage + 1 })">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    body {
+        background-image: url('/image/bg.jpg'); /* Replace with the path to your image */
+        background-size: cover; /* Ensures the image covers the entire background */
+        background-position: center; /* Centers the image */
+        height: 100vh; /* Ensures full height */
+        margin: 0; /* Removes default margin */
+    }
+</style>
+
+<div class="d-flex align-items-center justify-content-center vh-100">
+    <div class="text-center bg-light p-5 rounded" style="opacity: 0.8;">
+        <h1 class="display-4">Welcome to the Book Management System</h1>
+        <p>Search for your favorite books:</p>
+        
+        <form action="/books/search" method="get" class="mt-4">
+            <input type="text" name="query" placeholder="Enter the book name..." class="form-control" style="width: 300px; display: inline-block;" required />
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        
+        <p class="mt-4">Want to add a new book? <a href="/Books/create" class="text-success">Click here to register a book.</a></p>
+    </div>
+</div>
