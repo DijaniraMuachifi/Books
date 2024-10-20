@@ -54,7 +54,7 @@ A `Book` entity stores the details such as title, author, genre, and publication
 ### Setup Steps
 1. Clone the repository:
    ```bash
-   git clone https://github.com/DijaniraMuachifi/task.git
+   git clone https://github.com/DijaniraMuachifi/Books.git
    ```
 2. Update the PostgreSQL credentials in `appsettings.json`.
 3. Run migrations:
